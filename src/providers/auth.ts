@@ -3,9 +3,9 @@ import { AuthProvider } from "@refinedev/core";
 import { API_URL, dataProvider } from "./data";
 
 // Credentials for demo purposes
-const authCredentials = {
-  email: "user100@gmail.com",
-  password: "user100",
+export const authCredentials = {
+  eamil: "michael.scott@dundermifflin.com",
+  password: "demodemo"
 };
 
 // Authentication provider implementation
