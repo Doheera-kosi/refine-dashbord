@@ -1,8 +1,18 @@
+// {
+//   "compilerOptions": {
+//     "composite": true,
+//     "module": "ESNext",
+//     "moduleResolution": "node"
+//   },
+//   "include": ["vite.config.ts"]
+// }
+
 {
   "compilerOptions": {
     "composite": true,
     "module": "ESNext",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "types": ["istanbul-lib-coverage"]
   },
   "include": ["vite.config.ts"]
 }
