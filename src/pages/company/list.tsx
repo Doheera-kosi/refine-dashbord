@@ -13,12 +13,12 @@ export const CompanyList = () => {
   const { tableProps, filters } = useTable({
     resource: 'companies',
 
-    onSearch: (values) => {
+    onSearch: (values: {name: string}) => {
       return [
         {
           field: 'name',
           operator: 'contains',
-          value: values.name
+          value: values.name || ''
         }
       ]
     },
