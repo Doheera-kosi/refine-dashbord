@@ -1,28 +1,30 @@
-import { Avatar, List, Skeleton } from 'antd'
-import React from 'react'
+import { Card, List } from "antd";
 
 const LatestActivitiesSkeleton = () => {
   const data = new Array(5).fill(null).map((_, index) => ({
     id: index,
-    title: <Skeleton.Button active style={{ width: "80%" }} />,
-    description: <Skeleton.Button active style={{ width: "60%", marginTop: 10 }} />,
-  }))
+  }));
 
   return (
-    <List
-      itemLayout="horizontal"
-      dataSource={data}
-      renderItem={(item) => (
-        <List.Item>
-          <List.Item.Meta
-            avatar={<Avatar icon={<Skeleton.Avatar active />} />}
-            title={item.title}
-            description={item.description}
-          />
-        </List.Item>
-      )}
-    />
-  )
-}
+    <Card
+      headStyle={{ padding: '16px' }}
+      bodyStyle={{ padding: '0 1rem' }}
+    >
+      <List
+        itemLayout="horizontal"
+        dataSource={data}
+        renderItem={() => (
+          <List.Item>
+            <div style={{ width: 50, height: 50, backgroundColor: '#f0f0f0', marginRight: 16 }} />
+            <List.Item.Meta
+              title={<div style={{ width: '50%', height: 24, backgroundColor: '#f0f0f0' }} />}
+              description={<div style={{ width: '100%', height: 24, backgroundColor: '#f0f0f0' }} />}
+            />
+          </List.Item>
+        )}
+      />
+    </Card>
+  );
+};
 
-export default LatestActivitiesSkeleton
+export default LatestActivitiesSkeleton;
