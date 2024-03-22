@@ -1,5 +1,5 @@
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
-import { Authenticated, GitHubBanner, Refine, WelcomePage } from "@refinedev/core";
+import { Authenticated, GitHubBanner, Refine } from "@refinedev/core";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
 import { useNotificationProvider } from "@refinedev/antd";
@@ -16,6 +16,7 @@ import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import {Home, ForgotPassword, Login, Register, CompanyList} from "./pages";
 import Layout from "./components/layout";
 import { resources } from "./config/resources";
+import Create from "./pages/company/create";
 
 function App() {
   return (
@@ -57,12 +58,10 @@ function App() {
                   </Authenticated>
                   }>
                     <Route index element={<Home />} />
-                    <Route 
-                      path="/companies"
-                      element={
-                        <CompanyList />
-                      } 
-                    />
+                    <Route path="/companies">
+                      <Route index element={<CompanyList />} />
+                      <Route path="create" element={<Create />} />
+                    </Route>
                 </Route>
               </Routes>
 
