@@ -12,13 +12,13 @@ export const resources: IResourceItem[] = [
 
   },
   {
-    name: 'compoanies',
+    name: 'companies',
     list: '/companies',
     show: '/companies/:id',
-    create: '/companies/new',
+    create: '/companies/create',
     edit: '/companies/edit/:id',
     meta: {
-      label: 'Compnanies',
+      label: 'Companies',
       icon: <ShopOutlined />
     }
   },
