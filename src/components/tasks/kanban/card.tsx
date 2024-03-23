@@ -9,18 +9,6 @@ import { Button, Card, ConfigProvider, Dropdown, MenuProps, Space, Tag, Tooltip,
 import dayjs from 'dayjs'
 import React, { memo, useMemo } from 'react'
 
-// type ProjectCardProps = {
-//   id: string,
-//   title: string,
-//   updatedAt: string,
-//   dueDate?: string,
-//   users?: {
-//     id: string,
-//     name: string,
-//     avatar?: User['avatarUrl']
-//   }[]
-// }
-
 type ProjectCardProps = {
   id: string,
   title: string,
