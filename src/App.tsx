@@ -26,7 +26,7 @@ function App() {
   return (
     <BrowserRouter>
       <RefineKbarProvider>
-        <GitHubBanner />
+        {/* <GitHubBanner /> */}
         <AntdApp>
           <DevtoolsProvider>
             <Refine
