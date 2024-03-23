@@ -19,6 +19,8 @@ import { resources } from "./config/resources";
 import Create from "./pages/company/create";
 import Edit from "./pages/company/edit";
 import List from "./pages/tasks/list";
+import CreateTask from "./pages/tasks/create";
+import EditTask from "./pages/tasks/edit";
 
 function App() {
   return (
@@ -70,8 +72,8 @@ function App() {
 
                       <Outlet  />
                     </List>}>
-                      <Route path="new" element={<TasksCreatePage />} />
-                      <Route path="edit/:id" element={<TasksEditPage />} />
+                      <Route path="new" element={<CreateTask />} />
+                      <Route path="edit/:id" element={<EditTask />} />
                     </Route>
                 </Route>
               </Routes>

@@ -1,85 +1,133 @@
-import { DollarOutlined } from '@ant-design/icons';
-import { Card } from 'antd';
-import { Text } from '../text';
-import { Area, AreaConfig } from '@ant-design/plots';
-import { useList } from '@refinedev/core';
-import { DASHBOARD_DEALS_CHART_QUERY } from '@/graphql/queries';
-import { mapDealsData } from '@/utilities/helpers';
-import React from 'react';
-import { GetFieldsFromList } from '@refinedev/nestjs-query';
-import { DashboardDealsChartQuery } from '@/graphql/types';
+import React, { lazy, Suspense, useMemo } from "react";
+import { useList, useNavigation } from "@refinedev/core";
+import { GetFieldsFromList } from "@refinedev/nestjs-query";
+import { DollarOutlined, RightCircleOutlined } from "@ant-design/icons";
+import { AreaConfig } from "@ant-design/plots";
+import { Button, Card } from "antd";
+import dayjs from "dayjs";
+import { Text } from "@/components";
+import { DashboardDealsChartQuery } from "@/graphql/types";
+import { DASHBOARD_DEALS_CHART_QUERY } from "@/graphql/queries";
 
-const DealsChart = () => {
-  const { data } = useList<GetFieldsFromList<DashboardDealsChartQuery>>({
-    resource: 'dealStages',
-    filters: [{ field: 'title', operator: 'in', value: ['WON', 'LOST'] }],
+const Area = lazy(() => import("@ant-design/plots/es/components/area"));
+
+export const DealsChart: React.FC = () => {
+  const { list } = useNavigation();
+  const { data, isError, error } = useList<
+    GetFieldsFromList<DashboardDealsChartQuery>
+  >({
+    resource: "dealStages",
+    filters: [{ field: "title", operator: "in", value: ["WON", "LOST"] }],
     meta: {
-      gqlQuery: DASHBOARD_DEALS_CHART_QUERY
-    }
+      gqlQuery: DASHBOARD_DEALS_CHART_QUERY,
+    },
   });
 
-  const dealData = React.useMemo(() => {
-    if (data?.data) {
-      // Assuming data.data is an array of DealStage objects
-      return mapDealsData(data.data);
-    } else {
+  const dealData = useMemo(() => {
+    if (isError) {
+      console.error("Error fetching deals chart data", error);
       return [];
     }
-  }, [data?.data])
+
+    const won = data?.data
+      .find((node) => node.title === "WON")
+      ?.dealsAggregate.map((item) => {
+        const { closeDateMonth, closeDateYear } = item.groupBy!;
+        const date = dayjs(`${closeDateYear}-${closeDateMonth}-01`);
+        return {
+          timeUnix: date.unix(),
+          timeText: date.format("MMM YYYY"),
+          value: item.sum?.value,
+          state: "Won",
+        };
+      });
+
+    const lost = data?.data
+      .find((node) => node.title === "LOST")
+      ?.dealsAggregate.map((item) => {
+        const { closeDateMonth, closeDateYear } = item.groupBy!;
+        const date = dayjs(`${closeDateYear}-${closeDateMonth}-01`);
+        return {
+          timeUnix: date.unix(),
+          timeText: date.format("MMM YYYY"),
+          value: item.sum?.value,
+          state: "Lost",
+        };
+      });
+
+    return [...(won || []), ...(lost || [])].sort(
+      (a, b) => a.timeUnix - b.timeUnix
+    );
+  }, [data, isError, error]);
 
   const config: AreaConfig = {
-    data: dealData,
-    xField: 'timeText',
-    yField: 'value',
     isStack: false,
-    seriesField: 'state',
+    data: dealData,
+    xField: "timeText",
+    yField: "value",
+    seriesField: "state",
     animation: true,
     startOnZero: false,
     smooth: true,
     legend: {
-      offsetY: -6
+      offsetY: -6,
     },
     yAxis: {
       tickCount: 4,
       label: {
-        formatter: (v: string) => {
-          return `$${Number(v) /0.01}k`
-        }
-      }
+        formatter: (v) => {
+          return `$${Number(v) / 1000}k`;
+        },
+      },
     },
     tooltip: {
       formatter: (data) => {
         return {
           name: data.state,
-          value: `$${Number(data.value) /0.01}k`
-        }
-      }
-    }
-  }
+          value: `$${Number(data.value) / 1000}k`,
+        };
+      },
+    },
+    areaStyle: (datum) => {
+      const won = "l(270) 0:#ffffff 0.5:#b7eb8f 1:#52c41a";
+      const lost = "l(270) 0:#ffffff 0.5:#f3b7c2 1:#ff4d4f";
+      return { fill: datum.state === "Won" ? won : lost };
+    },
+    color: (datum) => {
+      return datum.state === "Won" ? "#52C41A" : "#F5222D";
+    },
+  };
 
   return (
     <Card
-      style={{ height: '100%'}}
-      headStyle={{padding: '8px 16px'}}
-      bodyStyle={{padding: '24px 24px 0 24px'}}
+      style={{ height: "100%" }}
+      headStyle={{ padding: "8px 16px" }}
+      bodyStyle={{ padding: "24px 24px 0px 24px" }}
       title={
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
           }}
         >
           <DollarOutlined />
-          <Text size='sm' style={{ marginLeft: '0.5rem'}}>
+          <Text size="sm" style={{ marginLeft: ".5rem" }}>
             Deals
           </Text>
         </div>
       }
+      extra={
+        <Button onClick={() => list("deals")} icon={<RightCircleOutlined />}>
+          See sales pipeline
+        </Button>
+      }
     >
-      <Area {...config} height={325}/> 
+      <Suspense>
+        <Area {...config} height={325} />
+      </Suspense>
     </Card>
   );
-}
+};
 
 export default DealsChart;
