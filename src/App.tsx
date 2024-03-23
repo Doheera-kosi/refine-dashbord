@@ -13,7 +13,7 @@ import routerBindings, {
 } from "@refinedev/react-router-v6";
 import { App as AntdApp } from "antd";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import {Home, ForgotPassword, Login, Register, CompanyList} from "./pages";
+import { Home, ForgotPassword, Login, Register, CompanyList } from "./pages";
 import Layout from "./components/layout";
 import { resources } from "./config/resources";
 import Create from "./pages/company/create";
@@ -49,32 +49,37 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
-              
-                <Route 
+
+                <Route
                   element={
-                  <Authenticated 
-                    key="authenticated-layout"
-                    fallback={<CatchAllNavigate to="/login"/>}
+                    <Authenticated
+                      key="authenticated-layout"
+                      fallback={<CatchAllNavigate to="/login" />}
+                    >
+                      <Layout>
+                        <Outlet />
+                      </Layout>
+                    </Authenticated>
+                  }
+                >
+                  <Route index element={<Home />} />
+                  <Route path="/companies">
+                    <Route index element={<CompanyList />} />
+                    <Route path="create" element={<Create />} />
+                    <Route path="edit/:id" element={<Edit />} />
+                  </Route>
+
+                  <Route
+                    path="/tasks"
+                    element={
+                      <List>
+                        <Outlet />
+                      </List>
+                    }
                   >
-                    <Layout>
-                      <Outlet />
-                    </Layout>
-                  </Authenticated>
-                  }>
-                    <Route index element={<Home />} />
-                    <Route path="/companies">
-                      <Route index element={<CompanyList />} />
-                      <Route path="create" element={<Create />} />
-                      <Route path="edit/:id" element={<Edit />} />
-                    </Route>
-
-                    <Route path="/tasks" element={<List>
-
-                      <Outlet  />
-                    </List>}>
-                      <Route path="new" element={<CreateTask />} />
-                      <Route path="edit/:id" element={<EditTask />} />
-                    </Route>
+                    <Route path="new" element={<CreateTask />} />
+                    <Route path="edit/:id" element={<EditTask />} />
+                  </Route>
                 </Route>
               </Routes>
 

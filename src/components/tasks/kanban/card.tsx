@@ -1,75 +1,90 @@
-import CustomAvatar from '@/components/custom-avatar'
-import { Text } from '@/components/text'
-import { TextIcon } from '@/components/text-icon'
-import { User } from '@/graphql/schema.types'
-import { getDateColor } from '@/utilities'
-import { ClockCircleOutlined, DeleteOutlined, EyeOutlined, MoreOutlined } from '@ant-design/icons'
-import { useDelete, useNavigation } from '@refinedev/core'
-import { Button, Card, ConfigProvider, Dropdown, MenuProps, Space, Tag, Tooltip, theme } from 'antd'
-import dayjs from 'dayjs'
-import React, { memo, useMemo } from 'react'
+import CustomAvatar from "@/components/custom-avatar";
+import { Text } from "@/components/text";
+import { TextIcon } from "@/components/text-icon";
+import { User } from "@/graphql/schema.types";
+import { getDateColor } from "@/utilities";
+import {
+  ClockCircleOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  MoreOutlined,
+} from "@ant-design/icons";
+import { useDelete, useNavigation } from "@refinedev/core";
+import {
+  Button,
+  Card,
+  ConfigProvider,
+  Dropdown,
+  MenuProps,
+  Space,
+  Tag,
+  Tooltip,
+  theme,
+} from "antd";
+import dayjs from "dayjs";
+import React, { memo, useMemo } from "react";
 
 type ProjectCardProps = {
-  id: string,
-  title: string,
-  updatedAt: string,
-  dueDate?: string,
+  id: string;
+  title: string;
+  updatedAt: string;
+  dueDate?: string;
   users?: {
-    id: string,
-    name: string,
-    avatar?: string,
-    avatarUrl?: string,
-  }[]
-}
+    id: string;
+    name: string;
+    avatar?: string | undefined;
+    avatarUrl?: string | undefined | null;
+  }[];
+};
 
-const ProjectCard = ({id, title, dueDate, users}: ProjectCardProps) => {
-  const {token} = theme.useToken()
+const ProjectCard = ({ id, title, dueDate, users }: ProjectCardProps) => {
+  const { token } = theme.useToken();
 
-  const {edit} = useNavigation()
-  const {mutate} = useDelete()
+  const { edit } = useNavigation();
+  const { mutate } = useDelete();
 
   // const edit = () => {}
 
   const dropdwonItems = useMemo(() => {
-    const dropdwonItems: MenuProps['items'] =[
+    const dropdwonItems: MenuProps["items"] = [
       {
-        label: 'View card',
-        key: '1',
+        label: "View card",
+        key: "1",
         icon: <EyeOutlined />,
         onClick: () => {
-          edit('tasks', id, 'replace')
-        }
+          edit("tasks", id, "replace");
+        },
       },
       {
         danger: true,
-        label: 'Delete card',
-        key: '2',
+        label: "Delete card",
+        key: "2",
         icon: <DeleteOutlined />,
-        onClick: () =>{
+        onClick: () => {
           mutate({
-            resource: 'tasks',
+            resource: "tasks",
             id,
             meta: {
-              operation: 'task'
-            }
-          })
-        }
-      }
-    ]
+              operation: "task",
+            },
+          });
+        },
+      },
+    ];
 
-    return dropdwonItems
-  }, [edit, id, mutate])
+    return dropdwonItems;
+  }, [edit, id, mutate]);
 
   const dueDateOptions = useMemo(() => {
-    if(!dueDate) return null;
+    if (!dueDate) return null;
 
     const date = dayjs(dueDate);
 
     return {
-      color: getDateColor({date: dueDate}) as string,
-      text: date.format('MMM DD')
-    }
-  }, [dueDate])
+      color: getDateColor({ date: dueDate }) as string,
+      text: date.format("MMM DD"),
+    };
+  }, [dueDate]);
 
   return (
     <ConfigProvider
@@ -79,46 +94,45 @@ const ProjectCard = ({id, title, dueDate, users}: ProjectCardProps) => {
             colorText: token.colorTextSecondary,
           },
           Card: {
-            headerBg: 'transparent'
-          }
-        }
+            headerBg: "transparent",
+          },
+        },
       }}
     >
       <Card
-        size='small'
-        title={<Text ellipsis={{tooltip: title}}>{title}</Text>}
-        onClick={() => edit('tasks', id, 'replace')}
+        size="small"
+        title={<Text ellipsis={{ tooltip: title }}>{title}</Text>}
+        onClick={() => edit("tasks", id, "replace")}
         extra={
           <Dropdown
             trigger={["click"]}
             menu={{
               items: dropdwonItems,
               onPointerDown: (e) => {
-                e.stopPropagation()
+                e.stopPropagation();
               },
               onClick: (e) => {
-                e.domEvent.stopPropagation()
-              }
+                e.domEvent.stopPropagation();
+              },
             }}
-            placement='bottom'
-            arrow={{pointAtCenter: true}}
+            placement="bottom"
+            arrow={{ pointAtCenter: true }}
           >
             <Button
-              type='text'
-              shape='circle'
+              type="text"
+              shape="circle"
               icon={
                 <MoreOutlined
                   style={{
-                    transform: 'rotate(90deg)'
+                    transform: "rotate(90deg)",
                   }}
                 />
               }
               onPointerDown={(e) => {
-                e.stopPropagation()
+                e.stopPropagation();
               }}
-
               onClick={(e) => {
-                e.stopPropagation()
+                e.stopPropagation();
               }}
             />
           </Dropdown>
@@ -126,25 +140,24 @@ const ProjectCard = ({id, title, dueDate, users}: ProjectCardProps) => {
       >
         <div
           style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            gap: '8px'
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "8px",
           }}
         >
-          <TextIcon style={{marginRight: '4px'}}/>
+          <TextIcon style={{ marginRight: "4px" }} />
           {dueDateOptions && (
             <Tag
-              icon= {
-                <ClockCircleOutlined style={{fontSize: '12px'}}/>
-              }
+              icon={<ClockCircleOutlined style={{ fontSize: "12px" }} />}
               style={{
-                padding: '0 4px',
-                marginInlineEnd: '0',
-                backgroundColor: dueDateOptions.color === 'default' ? 'transparent' : 'unset'
+                padding: "0 4px",
+                marginInlineEnd: "0",
+                backgroundColor:
+                  dueDateOptions.color === "default" ? "transparent" : "unset",
               }}
               color={dueDateOptions.color}
-              bordered={dueDateOptions.color !== 'default'}
+              bordered={dueDateOptions.color !== "default"}
             >
               {dueDateOptions.text}
             </Tag>
@@ -154,37 +167,36 @@ const ProjectCard = ({id, title, dueDate, users}: ProjectCardProps) => {
             <Space
               size={4}
               wrap
-              direction='horizontal'
-              align='center'
+              direction="horizontal"
+              align="center"
               style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                marginLeft: 'auto',
-                marginRight: 0
+                display: "flex",
+                justifyContent: "flex-end",
+                marginLeft: "auto",
+                marginRight: 0,
               }}
             >
               {users.map((user) => (
                 <Tooltip key={user.id} title={user.name}>
-                  <CustomAvatar name={user.name} src={user.avatarUrl}/>
+                  <CustomAvatar name={user.name} src={user.avatarUrl} />
                 </Tooltip>
               ))}
             </Space>
           )}
         </div>
       </Card>
-      
     </ConfigProvider>
-  )
-}
+  );
+};
 
-export default ProjectCard
+export default ProjectCard;
 
 export const ProjectCardMemo = memo(ProjectCard, (prev, next) => {
   return (
     prev.id === next.id &&
-    prev.title === next.title && 
+    prev.title === next.title &&
     prev.dueDate === next.dueDate &&
-    prev.users?.length === next.users && 
+    prev.users?.length === next.users?.length &&
     prev.updatedAt === next.updatedAt
-  )
-})
+  );
+});
