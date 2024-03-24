@@ -32,7 +32,7 @@ export const DealsChart: React.FC = () => {
     const won = data?.data
       .find((node) => node.title === "WON")
       ?.dealsAggregate.map((item) => {
-        const { closeDateMonth, closeDateYear } = item.groupBy!;
+        const { closeDateMonth, closeDateYear } = item.groupBy ?? {};
         const date = dayjs(`${closeDateYear}-${closeDateMonth}-01`);
         return {
           timeUnix: date.unix(),
@@ -45,7 +45,7 @@ export const DealsChart: React.FC = () => {
     const lost = data?.data
       .find((node) => node.title === "LOST")
       ?.dealsAggregate.map((item) => {
-        const { closeDateMonth, closeDateYear } = item.groupBy!;
+        const { closeDateMonth, closeDateYear } = item.groupBy ?? {};
         const date = dayjs(`${closeDateYear}-${closeDateMonth}-01`);
         return {
           timeUnix: date.unix(),
