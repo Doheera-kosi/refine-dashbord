@@ -26,7 +26,7 @@ Error | null => {
   if(!body) {
     return {
       message: 'Unkown Error',
-      statusCode: "INTERNAL_SERVER_ERRO"
+      statusCode: "INTERNAL_SERVER_ERROR"
     }
   }
   
