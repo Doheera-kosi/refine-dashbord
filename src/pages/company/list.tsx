@@ -89,7 +89,7 @@ export const CompanyList = ({ children }: React.PropsWithChildren) => {
         >
           <Table.Column<Company>
             dataIndex="name"
-            title="Company Title"
+            title="Company"
             defaultFilteredValue={getDefaultFilter("id", filters)}
             filterIcon={<SearchOutlined />}
             filterDropdown={(props) => (
@@ -111,7 +111,7 @@ export const CompanyList = ({ children }: React.PropsWithChildren) => {
 
           <Table.Column<Company>
             dataIndex="totalRevenue"
-            title="Open deals amount"
+            title="Open Deals"
             render={(value, company) => (
               <Text>
                 {currencyNumber(company?.dealsAggregate?.[0].sum?.value || 0)}
